@@ -14,6 +14,7 @@ export default function App() {
   const [jobId, setJobId] = useState(null);
   const [status, setStatus] = useState(null);
   const [error, setError] = useState(null);
+  const [errorDetail, setErrorDetail] = useState(null);
   const [isBusy, setIsBusy] = useState(false);
   const pollRef = useRef(null);
 
@@ -31,7 +32,10 @@ export default function App() {
         if (data.status === "done" || data.status === "error") {
           clearInterval(pollRef.current);
           setIsBusy(false);
-          if (data.status === "error") setError(data.error || "The agent hit an error.");
+          if (data.status === "error") {
+            setError(data.error || "The agent hit an error processing this dataset.");
+            setErrorDetail(data.error_detail || null);
+          }
         }
       } catch (err) {
         clearInterval(pollRef.current);
@@ -43,6 +47,7 @@ export default function App() {
 
   const handleAnalyze = async () => {
     setError(null);
+    setErrorDetail(null);
     setStatus(null);
     setIsBusy(true);
 
@@ -77,7 +82,17 @@ export default function App() {
         </p>
       </header>
 
-      {error && <div className="error-banner">{error}</div>}
+      {error && (
+        <div className="error-banner">
+          <strong>Something went wrong.</strong> {error}
+          {errorDetail && (
+            <details style={{ marginTop: 8 }}>
+              <summary style={{ cursor: "pointer" }}>Technical detail</summary>
+              <code style={{ fontSize: 12 }}>{errorDetail}</code>
+            </details>
+          )}
+        </div>
+      )}
 
       <UploadCard file={file} onFileSelected={setFile} onAnalyze={handleAnalyze} isBusy={isBusy} />
 

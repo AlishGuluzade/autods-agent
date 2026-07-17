@@ -55,7 +55,21 @@ def _run_graph_in_background(job_id: str, dataset_path: str):
     except Exception as exc:  # keep the job store updated even on failure
         from app.job_store import update_job
 
-        update_job(job_id, {"status": "error", "error": str(exc)})
+        friendly_message = (
+            "The agent couldn't finish analyzing this file. This usually means the dataset's "
+            "structure confused the automatic target-column detection (e.g. no clear column to "
+            "predict, or a column that looks like an ID/free-text field). Try a dataset with an "
+            "obvious outcome column (like 'churn', 'survived', or 'price'), or add a GROQ_API_KEY "
+            "so a real LLM makes the planning decisions instead of the built-in heuristics."
+        )
+        update_job(
+            job_id,
+            {
+                "status": "error",
+                "error": friendly_message,
+                "error_detail": str(exc),
+            },
+        )
 
 
 @api.post("/analyze/{dataset_id}", response_model=AnalyzeResponse)
@@ -87,6 +101,7 @@ async def status(job_id: str):
         "explanation_text": job.get("explanation_text"),
         "top_features": job.get("top_features"),
         "error": job.get("error"),
+        "error_detail": job.get("error_detail"),
     }
 
 
