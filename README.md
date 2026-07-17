@@ -1,3 +1,13 @@
+---
+title: AutoDS Agent
+emoji: 🤖
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # AutoDS Agent
 
 **Hand it a spreadsheet. It hands back a tuned model, an explanation, and a report.**
