@@ -170,7 +170,22 @@ autods-agent/
 └── docs/
     └── architecture.md
 ```
+## Known limitations
 
+- **Heuristic mode isn't perfect.** Without a `GROQ_API_KEY`, target-column and
+  feature-selection decisions come from rule-based heuristics (see
+  `app/agent/llm.py`), not real reasoning. They handle common cases (ID columns,
+  free-text fields, obvious target names) but can still pick a suboptimal target
+  on unusual datasets. Adding a `GROQ_API_KEY` makes these decisions with a real
+  LLM instead.
+- **If you see ~100% accuracy, be suspicious, not impressed.** That's almost
+  always a sign of *data leakage* -- a feature that's really just the target in
+  disguise (e.g. a "position" column that directly encodes a "medal" column).
+  The agent doesn't currently detect this automatically; treat a too-good
+  metric as a prompt to check for a leaking column, the same way you would in
+  any manual analysis.
+
+  
 ## Extending it
 
 - **New problem types**: add a conditional edge after `plan_node` (LangGraph supports
