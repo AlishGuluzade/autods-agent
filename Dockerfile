@@ -32,9 +32,9 @@ COPY --from=frontend-build /frontend/dist ./frontend_dist
 ENV FRONTEND_DIST=/app/frontend_dist
 ENV UPLOAD_DIR=/tmp/autods_uploads
 ENV ARTIFACTS_DIR=/tmp/autods_artifacts
-ENV PORT=8080
+ENV PORT=7860
 
 # Cloud Run injects $PORT at runtime and requires the container to listen on
-# it; Hugging Face Spaces expects 7860 -- override PORT=7860 there if needed.
-EXPOSE 8080
+# it; Hugging Face Spaces expects 7860 by default.
+EXPOSE 7860
 CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT}
