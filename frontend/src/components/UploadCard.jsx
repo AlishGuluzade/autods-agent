@@ -1,7 +1,5 @@
 import React, { useRef, useState } from "react";
 
-const EXAMPLE_HINT = "No CSV handy? Try the churn_sample.csv from the examples/ folder in this repo.";
-
 export default function UploadCard({ file, onFileSelected, onAnalyze, isBusy }) {
   const inputRef = useRef(null);
   const [dragging, setDragging] = useState(false);
@@ -42,8 +40,6 @@ export default function UploadCard({ file, onFileSelected, onAnalyze, isBusy }) 
         </div>
         {file && <div className="file-chip">{file.name}</div>}
       </div>
-
-      <p style={{ fontSize: 13, color: "var(--ink-soft)", marginTop: 12 }}>{EXAMPLE_HINT}</p>
 
       <button className="primary-btn" disabled={!file || isBusy} onClick={onAnalyze}>
         {isBusy ? "Agent is working…" : "Run the agent"}
